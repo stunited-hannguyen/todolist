@@ -1,31 +1,54 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Todo from "./Todo";
+import React, { useEffect, useState } from 'react';
+import TodoForm from './TodoForm';
+import Todo from './Todo';
 
-TodoList.propTypes = {
-  todo: PropTypes.array,
-  setTodo: PropTypes.func,
-  setTextInput : PropTypes.func,
-};
+function TodoList() {
+  const [todos, setTodos] = useState([]);
 
-function TodoList(props) {
-  const { todo, setTodo ,setTextInput ,onCheckBtnClick} = props;
+  const addTodo = todo => {
+    if (!todo.text || /^\s*$/.test(todo.text)) {
+      return;
+    }
+    const newTodos = [todo, ...todos];
+    setTodos(newTodos);
+  };
+
+  const updateTodo = (todoId, newValue) => {
+    if (!newValue.text || /^\s*$/.test(newValue.text)) {
+      return;
+    }
+
+    setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
+  };
+
+  const removeTodo = id => {
+    const removedArr = [...todos].filter(todo => todo.id !== id);
+
+    setTodos(removedArr);
+  };
+
+  const completeTodo = id => {
+    let updatedTodos = todos.map(todo => {
+      if (todo.id === id) {
+        todo.isComplete = !todo.isComplete;
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+  };
+
   return (
-    <div className="todolist">
-      <ul>
-        {todo.map((todos) => (
-          <Todo
-            text={todos.name}
-            key={todos.id}
-            todo={todo}
-            todos={todos}
-            setTodos={setTodo}
-            setTextInput={setTextInput}
-            onCheckBtnClick={onCheckBtnClick}
-          />
-        ))}
-      </ul>
-    </div>
+    <>
+      <h1>What's the Plan for Today?</h1>
+      <TodoForm onSubmit={addTodo} />
+      <Todo
+        todos={todos}
+        completeTodo={completeTodo}
+        removeTodo={removeTodo}
+        updateTodo={updateTodo}
+        setTodos={setTodos}
+      />
+    </>
   );
 }
 
