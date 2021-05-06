@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+.container{
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+.container Button {
+  margin-left: 20px;
+  padding: 10px;
+}
+.container ul li {
+  list-style: none;
+  font-size: 15px;
+  background-color: rgb(231, 160, 253);
+  padding: 5px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  color: aliceblue;
+  text-align: center;
+  margin-top: 10px;
+}
+.container ul li  .text{
+  text-decoration: line-through;
+}
