@@ -5,6 +5,16 @@ import Todo from './Todo';
 function TodoList() {
   const [todos, setTodos] = useState([]);
 
+  useEffect(()=>{
+    const storageTodo = localStorage.getItem("TODO")
+    if(storageTodo){
+      setTodos(JSON.parse(storageTodo))
+    }
+  },[])
+  useEffect(()=>{
+    localStorage.setItem('TODO',JSON.stringify(todos))
+  },[todos])  
+
   const addTodo = todo => {
     if (!todo.text || /^\s*$/.test(todo.text)) {
       return;
@@ -17,7 +27,6 @@ function TodoList() {
     if (!newValue.text || /^\s*$/.test(newValue.text)) {
       return;
     }
-
     setTodos(prev => prev.map(item => (item.id === todoId ? newValue : item)));
   };
 
@@ -36,10 +45,14 @@ function TodoList() {
     });
     setTodos(updatedTodos);
   };
+  const onBtnCheck = (id) => {
+      setTodos((prevState) => prevState.map((todo) =>  todo.id === id ? { ...todo,  isComplete : !todo.isComplete } : todo)); 
+  };
+
+
 
   return (
     <>
-      <h1>What's the Plan for Today?</h1>
       <TodoForm onSubmit={addTodo} />
       <Todo
         todos={todos}
@@ -47,6 +60,7 @@ function TodoList() {
         removeTodo={removeTodo}
         updateTodo={updateTodo}
         setTodos={setTodos}
+        onBtnCheck={onBtnCheck}
       />
     </>
   );

@@ -3,8 +3,9 @@ import TodoForm from './TodoForm';
 import { RiCloseCircleLine } from 'react-icons/ri';
 import { TiEdit } from 'react-icons/ti';
 import {BiCheck} from 'react-icons/bi'
+import * as _ from 'lodash';
 
-const Todo = ({ todos, completeTodo, removeTodo, updateTodo,setTodos }) => {
+const Todo = ({ todos, completeTodo, removeTodo, updateTodo,onBtnCheck }) => {
   const [edit, setEdit] = useState({
     id: null,
     value: ''
@@ -21,15 +22,10 @@ const Todo = ({ todos, completeTodo, removeTodo, updateTodo,setTodos }) => {
   if (edit.id) {
     return <TodoForm edit={edit} onSubmit={submitUpdate} />;
   }
-  const onBtnCheck =((id) => {
-        setTodos((prevState) =>
-        prevState.map((todo) => 
-        todo.id === id ? { ...todo, isComplete: true } : todo)); 
-        todos.sort(function(a,b){return a.isComplete-b.isComplete});
-        console.log(todos);
-        
-    });
-  return todos.map((todo, index) => (
+
+  const sortTodos = _.sortBy(todos, 'isComplete');
+
+  return sortTodos.map((todo, index) => (
     <div
       className={todo.isComplete ? 'todo-row complete' : 'todo-row'}
       key={index}
@@ -38,8 +34,8 @@ const Todo = ({ todos, completeTodo, removeTodo, updateTodo,setTodos }) => {
         {todo.text}
       </div>
       <div className='icons'>
-        <BiCheck className="checkbutton"
-        onClick={()=>onBtnCheck(todo.id)}
+        <BiCheck 
+        onClick={()=> onBtnCheck(todo.id)}
         />
         <RiCloseCircleLine
           onClick={() => removeTodo(todo.id)}
